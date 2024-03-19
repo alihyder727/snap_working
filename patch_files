@@ -1,0 +1,105 @@
+# Replacement files from package drum:
+drum/athena.hpp -> src/athena.hpp
+drum/parameter_input.hpp -> src/parameter_input.hpp
+drum/globals.cpp -> src/globals.cpp
+drum/athena_arrays.hpp -> src/athena_arrays.hpp
+drum/globals.hpp -> src/globals.hpp
+drum/main.cpp -> src/main.cpp
+drum/task_list/time_integrator.cpp -> src/task_list/time_integrator.cpp
+drum/task_list/task_list.hpp -> src/task_list/task_list.hpp
+drum/task_list/task_list.cpp -> src/task_list/task_list.cpp
+drum/mesh/mesh.cpp -> src/mesh/mesh.cpp
+drum/mesh/meshblock.cpp -> src/mesh/meshblock.cpp
+drum/mesh/mesh.hpp -> src/mesh/mesh.hpp
+drum/mesh/weighted_ave.cpp -> src/mesh/weighted_ave.cpp
+drum/bvals/bvals.hpp -> src/bvals/bvals.hpp
+drum/bvals/cc/hydro/bvals_hydro.hpp -> src/bvals/cc/hydro/bvals_hydro.hpp
+drum/utils/utils.hpp -> src/utils/utils.hpp
+drum/reconstruct/reconstruction.hpp -> src/reconstruct/reconstruction.hpp
+drum/reconstruct/reconstruction.cpp -> src/reconstruct/reconstruction.cpp
+drum/outputs/history.cpp -> src/outputs/history.cpp
+drum/outputs/outputs.hpp -> src/outputs/outputs.hpp
+drum/outputs/outputs.cpp -> src/outputs/outputs.cpp
+drum/outputs/restart.cpp -> src/outputs/restart.cpp
+drum/outputs/formatted_table.cpp -> src/outputs/formatted_table.cpp
+drum/eos/adiabatic_hydro.cpp -> src/eos/adiabatic_hydro.cpp
+drum/hydro/add_flux_divergence.cpp -> src/hydro/add_flux_divergence.cpp
+drum/hydro/hydro.hpp -> src/hydro/hydro.hpp
+drum/hydro/hydro.cpp -> src/hydro/hydro.cpp
+drum/hydro/new_blockdt.cpp -> src/hydro/new_blockdt.cpp
+drum/hydro/calculate_fluxes.cpp -> src/hydro/calculate_fluxes.cpp
+drum/hydro/rsolvers/hydro/hllc.cpp -> src/hydro/rsolvers/hydro/hllc.cpp
+drum/hydro/hydro_diffusion/hydro_diffusion.hpp -> src/hydro/hydro_diffusion/hydro_diffusion.hpp
+drum/hydro/hydro_diffusion/conduction.cpp -> src/hydro/hydro_diffusion/conduction.cpp
+drum/hydro/hydro_diffusion/hydro_diffusion.cpp -> src/hydro/hydro_diffusion/hydro_diffusion.cpp
+drum/hydro/srcterms/constant_acc.cpp -> src/hydro/srcterms/constant_acc.cpp
+drum/hydro/srcterms/hydro_srcterms.hpp -> src/hydro/srcterms/hydro_srcterms.hpp
+drum/hydro/srcterms/hydro_srcterms.cpp -> src/hydro/srcterms/hydro_srcterms.cpp
+
+# Additional files from package drum:
+drum/task_list/inversion_task_list.hpp
+drum/task_list/inversion_task_list.cpp
+drum/task_list/task_manager.hpp
+drum/task_list/time_integrator_additions.cpp
+drum/mesh/meshblock_additions.cpp
+drum/mesh/cell_variables.hpp
+drum/bvals/cc/hydro/outflow_hydro.cpp
+drum/utils/utils.cpp
+drum/utils/read_data_table.cpp
+drum/reconstruct/weno5_simple.cpp
+drum/reconstruct/weno5.cpp
+drum/reconstruct/interpolation.hpp
+drum/reconstruct/interp_weno3.hpp
+drum/reconstruct/interp_weno5.hpp
+drum/scalars.save/scalars.cpp
+drum/scalars.save/add_scalar_flux_divergence.cpp
+drum/scalars.save/calculate_scalar_fluxes.cpp
+drum/scalars.save/scalar_diffusion.cpp
+drum/scalars.save/scalars.hpp
+drum/outputs/mppnccombine.cpp
+drum/outputs/combine_blocks.cpp
+drum/outputs/particles_table.cpp
+drum/outputs/debug.cpp
+drum/outputs/pnetcdf.cpp
+drum/outputs/fits.cpp
+drum/outputs/netcdf.cpp
+drum/outputs/get_num_variables.cpp
+drum/eos/shallow_water_hydro.cpp
+drum/hydro/vapor_concentration_limiter.cpp
+drum/hydro/polar_filter/ring_filter.cpp
+drum/hydro/polar_filter/ring_filter.hpp
+drum/hydro/polar_filter/apply_ring_filter.cpp
+drum/hydro/rsolvers/hydro/noflux.cpp
+drum/hydro/rsolvers/hydro/roe_shallow_water.cpp
+drum/hydro/rsolvers/hydro/lmars.cpp
+drum/hydro/hydro_diffusion/diffusion.cpp
+drum/hydro/srcterms/coriolis_acc.cpp
+drum/hydro/implicit/forward_backward.hpp
+drum/hydro/implicit/partial_correction.cpp
+drum/hydro/implicit/implicit_solver.hpp
+drum/hydro/implicit/periodic_forward_backward.hpp
+drum/hydro/implicit/forcing_jacobians.hpp
+drum/hydro/implicit/implicit_solver.cpp
+drum/hydro/implicit/flux_decomposition.hpp
+drum/hydro/implicit/communication.hpp
+drum/hydro/implicit/full_correction.cpp
+drum/hydro/decomposition/change_to_buoyancy.cpp
+drum/hydro/decomposition/decomposition.hpp
+drum/hydro/decomposition/decomposition.cpp
+drum/hydro/decomposition/apply_boundary_condition.cpp
+drum/hydro/decomposition/change_to_perturbation.cpp
+drum/pgen/hjupiter.cpp
+drum/pgen/harp_radio_js.cpp
+drum/pgen/straka.cpp
+drum/pgen/rbc_h2o.cpp
+drum/pgen/bryan.cpp
+drum/pgen/dry_rce.cpp
+drum/pgen/shallow_water.cpp
+drum/pgen/test_particle_circle.cpp
+drum/pgen/hjcloudrt.cpp
+drum/pgen/convection.cpp
+drum/pgen/polar_vortex.cpp
+drum/pgen/jupiter.cpp
+drum/pgen/jscm.cpp
+drum/pgen/robert.cpp
+

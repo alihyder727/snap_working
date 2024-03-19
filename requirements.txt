@@ -1,0 +1,7 @@
+# required python packages
+numpy
+matplotlib
+scipy
+astropy
+tqdm
+netCDF4

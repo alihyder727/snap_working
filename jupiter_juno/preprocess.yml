@@ -1,0 +1,265 @@
+name: steps to make graphs in publication
+jobs:
+  model-A-eq:
+    skip: true
+    needs:
+      files:
+        - juno_mwr-modelA.inp
+        - juno_mwr.ex
+        - combine.py
+    steps:
+      - name: run mwr model
+        run: ./juno_mwr.ex -i juno_mwr-modelA.inp
+      - name: combine outputs
+        run: ./combine.py
+      - name: move model output to data folder
+        run: mv juno_mwr-main.nc data/juno_mwr-modelA.nc
+      - name: remove unused files
+        run: rm juno_mwr.log combine_rules
+    outputs:
+      - data/juno_mwr-modelA.nc
+  jupiter-gravity:
+    skip: true
+    needs:
+      files:
+        - jup_lat_grav_grid.py
+    steps:
+      - name: calculate jupiter gravity as a function planetocentric latitude
+        run: ./jup_lat_grav_grid.py
+    output:
+      - data/jup_latitude_grid.txt
+      - data/jup_gravity_grid.txt
+  model-A-lat:
+    skip: true
+    needs:
+      files:
+        - juno_mwr-modelA.inp
+        - juno_mwr.ex
+        - combine.py
+        - data/jup_latitude_grid.txt
+        - data/jup_gravity_grid.txt
+      jobs:
+        - jupiter-gravity
+    strategy:
+      vector:
+        CLAT: data/jup_latitude_grid.txt
+        GRAV: data/jup_gravity_grid.txt
+    steps:
+      - name: run mwr model
+        run: ./juno_mwr.ex -i juno_mwr-modelA.inp hydro/grav_acc1=-$GRAV
+      - name: combine outputs
+        run: ./combine.py -o $CLAT
+      - name: move model output to data folder
+        run: mv juno_mwr-$CLAT-main.nc data/juno_mwr-modelA-$CLAT.nc
+      - name: remove unused files
+        run: rm juno_mwr.log combine_rules
+    outputs:
+      - data/juno_mwr-modelA-$CLAT.nc
+  plot-model-A-lat:
+    skip: true
+    needs:
+      files:
+        - plot_modelA_lat.py
+        - data/juno_mwr-modelA-*.nc
+        - data/jup_latitude_grid.txt
+      jobs:
+        - model-A-lat
+    steps:
+      - name: plot model-A-lat
+        run: ./plot_modelA_lat.py
+    outputs:
+      - figs/fig_modelA_lat.png
+  gravity-correction:
+    skip: true
+    needs:
+      files:
+        - gravity_correction.py
+        - plot_gravity_correction.py
+        - data/juno_mwr-modelA-*.nc
+        - data/jup_latitude_grid.txt
+      jobs:
+        - model-A-lat
+    steps:
+      - name: write gravity correction factor
+        run: ./gravity_correction.py
+      - name: plot gravity correction factor
+        run: ./plot_gravity_correction.py
+    outputs:
+      - data/gravity_correction_factor.txt
+      - figs/fig_gravity_correction.png
+  anomaly-filtering:
+    #skip: true
+    needs:
+      files:
+        - fao_ess_2020_data.h5
+        - data/gravity_correction_factor.txt
+      jobs:
+        - gravity-correction
+    steps:
+      - name: filter CH1
+        run: ./write_tbld_gfilter.py --ch=1
+      - name: filter CH2
+        run: ./write_tbld_gfilter.py --ch=2
+      - name: filter CH3
+        run: ./write_tbld_gfilter.py --ch=3
+      - name: filter CH4
+        run: ./write_tbld_gfilter.py --ch=4
+      - name: filter CH5
+        run: ./write_tbld_gfilter.py --ch=5
+      - name: filter CH6
+        run: ./write_tbld_gfilter.py --ch=6
+    outputs:
+        - data/ch1_gfilter.txt
+        - data/ch2_gfilter.txt
+        - data/ch3_gfilter.txt
+        - data/ch4_gfilter.txt
+        - data/ch5_gfilter.txt
+        - data/ch6_gfilter.txt
+  plot-tbld-eps:
+    skip: true
+    needs:
+      files:
+        - data/juno_mwr-modelA.nc
+        - data/ch1_gfilter.txt
+        - data/ch2_gfilter.txt
+        - data/ch3_gfilter.txt
+        - data/ch4_gfilter.txt
+        - data/ch5_gfilter.txt
+        - data/ch6_gfilter.txt
+        - plot_tbld_eps.py
+      jobs:
+        - anomaly-filtering
+        - model-A-eq
+    steps:
+      - name: plot Tb and Ld eps map
+        run: ./plot_tbld_eps.py
+    outputs:
+      - figs/fig_eps_tb.png
+      - figs/fig_eps_ld.png
+  plot-tbld-latitude:
+    skip: true
+    needs:
+      files:
+        - data/juno_mwr-modelA.nc
+        - data/ch1_gfilter.txt
+        - data/ch2_gfilter.txt
+        - data/ch3_gfilter.txt
+        - data/ch4_gfilter.txt
+        - data/ch5_gfilter.txt
+        - data/ch6_gfilter.txt
+        - plot_tb_gfilter.py
+        - plot_ld_gfilter.py
+      jobs:
+        - anomaly-filtering
+        - model-A-eq
+    steps:
+      - name: plot filtered Tb
+        run: ./plot_tb_gfilter.py
+      - name: plot filtered ld
+        run: ./plot_ld_gfilter.py
+    outputs:
+      - figs/fig_tb_gfilter.png
+      - figs/fig_ld_gfilter.png
+  write-mwr-decomposition:
+    skip: true
+    needs:
+      files:
+        - data/ch1_gfilter.txt
+        - data/ch2_gfilter.txt
+        - data/ch3_gfilter.txt
+        - data/ch4_gfilter.txt
+        - data/ch5_gfilter.txt
+        - data/ch6_gfilter.txt
+        - global_average.py
+        - zonal_anomaly.py
+        - perijove_average.py
+      jobs:
+        - anomaly-filtering
+    steps:
+      - name: calculate area-weighted global average
+        run: ./global_average.py
+      - name: calculate zonal anomaly for each perijove based on global average
+        run: ./zonal_anomaly.py
+      - name: calculate zonal average based on all perijoves
+        run: ./perijove_average.py
+      - name: write flagged zonal anomaly data
+        run: ./zona_anomaly_flag.py
+    outputs:
+      - data/mwr_global_average.txt
+      - data/mwr_zonal_anomaly.txt
+      - data/mwr_zonal_average.txt
+      - data/mwr_zonal_anomaly_flag.txt
+  plot-mwr-filtered:
+    skip: true
+    needs:
+      files:
+        - data/mwr_zonal_anomaly_flag.txt
+      jobs:
+        - write-mwr-decomposition
+    steps:
+      - name: plot filtered zonal anomaly
+        run: ./plot_filtered_zonal_anomaly.py
+    outputs:
+      - figs/fig_filtered_zonal_tb_anomaly.png
+      - figs/fig_filtered_zonal_ld_anomaly.png
+  global-chi2:
+    skip: true
+    needs:
+      files:
+        - data/mwr_PJ1-12_global.obs
+        - data/juno_mwr-global-nh3-8-2.38.fits
+        - data/juno_mwr-global-tem-8-169.fits
+        - data/juno_mwr-global-tem-nh3-8-2.38-169.fits
+        - plot_chi2_globa.py
+      jobs:
+        - global-ammonia
+        - global-temperature
+        - global-ammonia-temperature
+    steps:
+      - name: plot Model N, Model T and Model NT
+        run: ./plot_chi2_global.py
+    outputs:
+      - name:
+  global-profile:
+    skip: true
+    needs:
+      files:
+        - data/juno_mwr-global-nh3-8-2.38-mcmc.nc
+        - data/juno_mwr-global-tem-8-169-mcmc.nc
+        - data/juno_mwr-global-tem-nh3-8-2.38-169-mcmc.nc
+        - plot_profile_global.py
+      jobs:
+        - global-ammonia
+        - global-temperature
+        - global-ammonia-temperature
+    steps:
+      - name: plot Model N, Model T and Model NT
+        run: ./plot_profile_global.py
+    outputs:
+      - name: figs/global_profiles.png
+  zonal-stack:
+    skip: true
+    needs:
+      files:
+        - data/mwr_zonal_average.txt
+        - jup_zone_belts.py
+        - plot_zonal_stack2.py
+        - u_vs_lat.jupiter.cassini
+    steps:
+      - name: plot 2d map of tb and ld anomaly as a function of frequency and latitude
+        run: ./plot_zonal_stack2.py
+    outputs:
+      - figs/zonal_stack_tbld.png
+  zonal-profile:
+    skip: true
+    needs:
+      files:
+        - juno_mwr-zonal-tem-nh3-8-2.38-169-2.99-mcmc.nc
+        - juno_mwr-zonal-tem-nh3-8-2.38-169-8.99-mcmc.nc
+        - juno_mwr-zonal-tem-nh3-8-2.38-169-50.48-mcmc.nc
+        - juno_mwr-zonal-tem-nh3-8-2.38-169--22.67-mcmc.nc
+        - plot_profile_zonal4.py
+    steps:
+      - name: plot 4 zonal vertical profiles
+        run: ./plot_profile_zonal4.py
+    outputs:
