@@ -151,9 +151,9 @@ const std::vector<double> GeH4_calc_coeff_low = {2.54992789E+00, 7.13885765E-03,
                                                 -2.33592977E-08, 9.65676013E-12, 9.69756465E+03, 9.02678812E+00};
 const std::vector<double> GeH4_calc_coeff_hig = {5.41474159E+00, 7.24155154E-03, -2.71818301E-06,
                                                 4.51535021E-10, -2.75635275E-14, 8.46356611E+03, -7.83419271E+00};                                              
-const std::vector<double> GeH2_calc_coeff_low = {3.7766671605834596, 0.0009625978066155319, 3.939252214813524e-06, 
-                                                -3.8051748899537e-09, 1.0224338840428087e-12, 28811.902151701965, 
-                                                  5.704596034306216};
+const std::vector<double> GeH2_calc_coeff_low = {3.7506863639539256, 0.0012245935111650902, 3.0583823228765663e-06, 
+                                                -2.6215501966870634e-09, 4.773981941350087e-13, 28813.05596993913,
+                                                6.315204425285269};
 // GeH2 coefficients have more error in the high T limit (as demonstrated by CH2 and SiH2)
 const std::vector<double> GeH2_calc_coeff_hig = GeH2_calc_coeff_low;
 
