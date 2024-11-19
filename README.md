@@ -72,3 +72,29 @@ Athena++ Atmospheric Dynamics Code
     - \bug
     - \warning
     - \deprecated
+
+## General build and compilation:
+
+- In main directory, snap_working/, first patch the code:
+	- ./patch.py
+
+- Configure the code for the specific problem and serial/parallel run. This example is for the moist Jupiter runs with PH3 and GeH4 scalars. Setting nscalars=1 will configure the problem for CO, exclusively.
+	- ./configure.py --prob=convection --flux=lmars --nvapor=2 --nscalars=2 --nghost=3 -netcdf
+
+- Compile using "make". You can also use "make -jx", where x should be changed to however many cores you are trying to compile over.
+
+- The executable will be created in the bin/ folder. The main executable needed will have the same name as the --prob variable used to set up the configuration. In this case, it would be convection.exe. Make a run directory where the output will be stored. Ensure that the input file ".inp" is located within this run directory.	- mkdir example_run
+	- cd example_run/
+	- cp ../bin/convection.exe .
+	- cp ../moist_jupiter/jupiter2d.inp/.
+
+- Execute the code (assuming serial run)
+	- ./convection.ex -i jupiter2d_moist.inp > log.jupiter_moist &
+
+## Output
+
+- The run outputs .nc files, for which you need netCDF installed. To view these, softwares like ncview can be used. There will be many .nc files so first we must combine them using the functionality provided. We will name the final file "test" for this example:
+	- ../combine.py -o test
+	- ncdump -h jupiter-test-main.nc
+
+- The final command will provide a netcdf output with self-descriptive units and long names. The final .nc file can be viewed as a movie using the ncview functionality of the netCDF library. However, custom scripts can be written as well. If using Python, you must ensure that the netCDF4 library is installed.
