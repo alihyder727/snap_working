@@ -98,3 +98,5 @@ Athena++ Atmospheric Dynamics Code
 	- ncdump -h jupiter-test-main.nc
 
 - The final command will provide a netcdf output with self-descriptive units and long names. The final .nc file can be viewed as a movie using the ncview functionality of the netCDF library. However, custom scripts can be written as well. If using Python, you must ensure that the netCDF4 library is installed.
+
+NOTE: The softlinks used for the main code will be appropriately linked upon the execution of ./patch.py.
