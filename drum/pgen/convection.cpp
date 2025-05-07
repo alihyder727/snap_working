@@ -1,7 +1,8 @@
 /** @file convection.cpp
  * @brief Simulate convection in planetary atmospheres
  *
- * @author Cheng Li (chengcli@umich.edu)
+ * @authors Ali Hyder (ali.hyder@jpl.nasa.gov) and Cheng Li (chengcli@umich.edu)
+ * @chemistry addition June 2023
  * @date Tuesday May 22, 2021 08:07:22 PDT
  * @bug No known bugs.
  */
