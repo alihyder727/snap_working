@@ -1,0 +1,118 @@
+<comment>
+problem   = 3D Jupiter RCE model
+configure = --prob=jupiter-rce-rst --flux=lmars --chem=kessler94 --nvapor=2 --nphase=3 --nghost=3 -pnetcdf -mpi --pnetcdf_path=../../pnetcdf
+
+<job>
+problem_id  = jupiter     # problem ID: basename of output filenames
+
+<output0>
+file_type   = rst
+dt          = 8.64E7
+
+<output1>
+file_type   = hst
+dt          = 8.64E4
+data_format = %13.10e
+
+<output2>
+file_type   = pnetcdf     # Tabular data dump
+variable    = prim        # variables to be output
+dt          = 8.64E6      # time increment between outputs
+
+<output3>
+file_type   = pnetcdf
+variable    = uov
+dt          = 8.64E6
+
+<output4>
+file_type   = pnetcdf
+variable    = diag
+dt          = 8.64E6
+
+<time>
+cfl_number  = 1.0         # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim        = -1          # cycle limit
+xorder      = 5
+integrator  = rk3
+tlim        = 6.912E8     # time limit
+ncycle_out  = 1000
+
+<mesh>
+nx1         = 140         # Number of zones in X1-direction
+x1min       = -200.E3     # minimum value of X1
+x1max       = 80.E3       # maximum value of X1
+ix1_bc      = reflecting  # Inner-X1 boundary condition flag
+ox1_bc      = reflecting  # Outer-X1 boundary condition flag
+
+nx2         = 40          # Number of zones in X2-direction
+x2min       = 0.          # minimum value of X2
+x2max       = 400.E3      # maximum value of X2
+ix2_bc      = periodic    # Inner-X2 boundary condition flag
+ox2_bc      = periodic    # Outer-X2 boundary condition flag
+
+nx3         = 40           # Number of zones in X3-direction
+x3min       = 0.          # minimum value of X3
+x3max       = 400.E3      # maximum value of X3
+ix3_bc      = periodic    # Inner-X3 boundary condition flag
+ox3_bc      = periodic    # Outer-X3 boundary condition flag
+
+<meshblock>
+nx1         = 28
+nx2         = 4
+nx3         = 5
+
+<hydro>
+gamma           = 1.42   # gamma = C_p/C_v
+grav_acc1       = -24.79
+min_tem         = 95.
+implicit_flag   = 1
+
+<thermodynamics>
+Rd          = 3777.
+eps1        = 8.18    8.18    8.18
+eps2        = 7.72    7.72    7.72
+Ttriple1    = 273.16  273.16  273.16
+Ttriple2    = 195.4   195.4   195.4
+Ptriple1    = 611.7   611.7   611.7
+Ptriple2    = 6060.   6060.   6060.
+beta1       = 0.      24.85   24.85
+beta2       = 0.      23.67   23.67
+rcp1        = 0.15    0.15    0.15
+rcp2        = 0.08    0.37    0.37
+
+<chemistry>
+order       = 1
+max_iter    = 2
+vsed5       = -10
+vsed6       = -10
+num_coeffs  = 3
+k1          = 1.E-4
+k2          = 0.
+k3          = 3.E-3
+
+<problem>
+P0          = 1.E5
+T0          = 166.
+Tmin        = 95.
+prad        = 1.E5
+hflux       = 7.5        # K/day
+p_cool_bot  = 1.E5
+p_cool_top  = 1.5E4
+qH2O        = 0.0231
+qNH3        = 0.0
+sponge_tau  = 1.E-4
+sponge_width = 2.E4
+pdrag       = 100.E5
+nu_iso      = 0.        # eddy viscosity
+Kv          = 0.        # no drag
+Omega       = 0.
+beta_f      = 0.
+center_deg  = -45.
+qRelaxT     = 1.E-4
+interp_pres = false
+HoriDiffHeat = false
+VertDiffHeat = false
+EqNoDragLat  = 0.
+NewtonCoolFlag = false
+NewtonCoolRate = 0.
+
