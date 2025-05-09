@@ -35,7 +35,7 @@
 #include <cmath>
 
 // global parameters
-Real grav, P0, T0, Z0, Tmin, radius, omega, nu_scalar_iso, tau_scale_factor;
+Real grav, P0, T0, Z0, Tmin, radius, omega, nu_scalar_iso, tau_scale_factor, A_co_const, B_co_const, C_co_const;
 bool use_polar_beta;
 int s_ind;
 
@@ -427,7 +427,8 @@ void Forcing(MeshBlock *pmb, Real const time, Real const dt,
             for (int n=0; n<NSCALARS; ++n){
               // Passive Scalar CO
               if (s_ind == 1) {
-                double tau = tau_scale_factor * 5E-6 * exp(2.8E4/temperature) * pow(w(IPR,k,j,i)/1E5, -1.29);
+                // double tau = tau_scale_factor * 5E-6 * exp(2.8E4/temperature) * pow(w(IPR,k,j,i)/1E5, -1.29); (Wang+2014)
+                double tau = tau_scale_factor * A_co_const * exp(B_co_const/temperature) * pow(w(IPR,k,j,i)/1E5, C_co_const);
                 double C_CO_equi = X_CO_Eq(w(IPR,k,j,i), temperature, 
                                     X_CH4, X_H2O, X_H2) * w(IDN,k,j,i)
                                     * (mu_CO/mean_mu); // conversion factor to Mass fraction;
@@ -505,6 +506,11 @@ void Mesh::InitUserMeshData(ParameterInput *pin)
   P0 = pin->GetReal("problem", "P0");
   T0 = pin->GetReal("problem", "T0");
   tau_scale_factor = pin->GetOrAddReal("problem", "tau_scale_factor", 1.);
+
+  // Get A, B, and C constants for the CO timescale - changes depending on C/H/O network used. Defaults to Wang+2014
+  A_co_const = pin->GetOrAddReal("problem", "A_co_const", 5E-6);
+  B_co_const = pin->GetOrAddReal("problem", "B_co_const", 2.8E4);
+  C_co_const = pin->GetOrAddReal("problem", "C_co_const", -1.29);
   
   // Scalar indexing: CO=1, PH3=2, GeH4=3; defaults to CO by design
   s_ind = pin->GetOrAddInteger("hydro", "s_ind", 1);
